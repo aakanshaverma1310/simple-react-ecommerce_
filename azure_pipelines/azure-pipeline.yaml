@@ -1,0 +1,27 @@
+trigger: none
+
+parameters:
+- name: ENV
+  displayName: Select environment to deploy to
+  type: string
+  default: NonProd
+  values:
+  - NonProd
+  - Prod
+  
+variables:
+    - name: myserivceConn
+      ${{ if eq(parameters.ENV, 'Dev') }}:
+        value: 'Service-Conn-Nonprod'
+      ${{ if eq(parameters.ENV, 'Prod') }}:
+        value: 'Service-Conn-Prod'
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- template: azure-pipeline-template.yaml
+  parameters:
+    ENV: '${{ parameters.ENV }}'
+
+
+
